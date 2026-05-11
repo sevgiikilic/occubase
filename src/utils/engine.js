@@ -1,4 +1,5 @@
 import { DISEASES, RESTRICTION_LABELS } from '../data/diseases'
+import { getCustomDiseases } from './customDiseases'
 
 const CAPACITY_PRIORITY = { PERMANENT_UNFIT: 3, TEMP_UNFIT: 2, RESTRICTED: 1, FULL: 0 }
 const RESTRICTION_PRIORITY = { NO: 2, EVALUATE: 1, YES: 0 }
@@ -53,7 +54,7 @@ export function runAssessment(selectedVariants) {
 }
 
 function findVariant(variantId) {
-  for (const disease of DISEASES) {
+  for (const disease of [...DISEASES, ...getCustomDiseases()]) {
     const variant = disease.variants.find(v => v.id === variantId)
     if (variant) return { ...variant, diseaseName: disease.name }
   }

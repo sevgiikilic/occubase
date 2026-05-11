@@ -1,13 +1,14 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { logout, getSession } from '../utils/auth'
 import {
-  LayoutDashboard, BookOpen, ClipboardList, LogOut, Stethoscope,
+  LayoutDashboard, BookOpen, ClipboardList, LogOut, Stethoscope, Settings,
 } from 'lucide-react'
 
 const navItems = [
   { to: '/dashboard', label: 'Genel Bakış', icon: LayoutDashboard },
   { to: '/library', label: 'Hastalık Kütüphanesi', icon: BookOpen },
   { to: '/assessment', label: 'Değerlendirme', icon: ClipboardList },
+  { to: '/settings', label: 'Ayarlar', icon: Settings },
 ]
 
 export default function Layout() {

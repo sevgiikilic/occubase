@@ -1,9 +1,11 @@
 import { useState, useRef } from 'react'
 import { DISEASES, CATEGORIES, RESTRICTION_LABELS } from '../data/diseases'
 import { runAssessment, CAPACITY_META, RESTRICTION_META } from '../utils/engine'
+import { parseDiseases, getApiKey } from '../utils/ai'
 import {
   Plus, X, Printer, Copy, CheckCircle, AlertTriangle,
   Clock, FlaskConical, UserCheck, ChevronDown, Info, ClipboardList,
+  Sparkles, Loader2, Stethoscope,
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip } from 'recharts'
 
@@ -68,11 +70,11 @@ export default function Assessment() {
       '',
       `PERİYODİK MUAYENE: Her ${result.periodicExam} ayda bir`,
       '',
-      'İSTENEN TETKİKLER:',
-      ...result.labTests.map(t => `  • ${t}`),
+      'İŞYERİ TEKKİLERİ:',
+      ...result.workplaceTests.map(t => `  • ${t}`),
       '',
-      'UZMAN SEVKİ:',
-      ...result.specialistReferrals.map(s => `  • ${s}`),
+      'UZMAN TAKİP KONTROLÜ:',
+      ...result.specialistFollowUp.map(s => `  • ${s}`),
       result.immediateActions.length ? '\nACİL ÖNLEMLER:' : '',
       ...result.immediateActions.map(a => `  ⚠ ${a}`),
       '',
@@ -135,6 +137,11 @@ export default function Assessment() {
             </div>
           </div>
 
+          {/* AI free-text input */}
+          <AITextInput onAddVariants={(ids) => {
+            ids.forEach(id => addVariant(id))
+          }} />
+
           {/* Disease selector */}
           <div className="bg-white rounded-2xl border border-slate-200 p-5">
             <h2 className="font-semibold text-slate-900 mb-4">Hastalık / Durum Ekle</h2>
@@ -182,6 +189,90 @@ export default function Assessment() {
           )}
         </div>
       </div>
+    </div>
+  )
+}
+
+function AITextInput({ onAddVariants }) {
+  const [text, setText] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [unmatched, setUnmatched] = useState([])
+  const [addedCount, setAddedCount] = useState(0)
+
+  const apiKey = getApiKey()
+
+  async function handleAnalyze() {
+    if (!text.trim()) return
+    setLoading(true)
+    setError('')
+    setUnmatched([])
+    setAddedCount(0)
+    try {
+      const result = await parseDiseases(text, apiKey, DISEASES)
+      const validIds = result.variants?.filter(id =>
+        DISEASES.some(d => d.variants.some(v => v.id === id))
+      ) || []
+      onAddVariants(validIds)
+      setAddedCount(validIds.length)
+      setUnmatched(result.unmatched || [])
+      if (validIds.length > 0) setText('')
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="bg-white rounded-2xl border border-slate-200 p-5">
+      <div className="flex items-center gap-2 mb-1">
+        <Sparkles size={16} className="text-violet-500" />
+        <h2 className="font-semibold text-slate-900 text-sm">Yapay Zeka ile Analiz</h2>
+        {!apiKey && (
+          <span className="text-xs text-slate-400 ml-auto">API anahtarı gerekli</span>
+        )}
+      </div>
+      <p className="text-xs text-slate-500 mb-3">
+        Hastalıkları serbest metin olarak yazın; AI otomatik eşleştirir.
+      </p>
+      <textarea
+        value={text}
+        onChange={e => { setText(e.target.value); setError(''); setAddedCount(0) }}
+        rows={3}
+        placeholder="ör. kontrollü HT, tip 2 DM, kronik bel ağrısı, işitme kaybı var..."
+        disabled={!apiKey}
+        className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 resize-none disabled:bg-slate-50 disabled:text-slate-400"
+      />
+
+      {error && (
+        <div className="mt-2 text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</div>
+      )}
+      {unmatched.length > 0 && (
+        <div className="mt-2 text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
+          Eşleştirilemeyen: {unmatched.join(', ')}
+        </div>
+      )}
+      {addedCount > 0 && (
+        <div className="mt-2 text-xs text-green-700 bg-green-50 rounded-lg px-3 py-2">
+          {addedCount} durum eklendi. Manuel olarak da kontrol edin.
+        </div>
+      )}
+
+      <button
+        onClick={handleAnalyze}
+        disabled={!apiKey || !text.trim() || loading}
+        className="mt-3 flex items-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-xs font-medium transition-colors"
+      >
+        {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+        {loading ? 'Analiz ediliyor...' : 'AI ile Analiz Et'}
+      </button>
+
+      {!apiKey && (
+        <p className="mt-2 text-xs text-slate-400">
+          Kullanmak için <a href="#/settings" className="text-blue-500 hover:underline">Ayarlar</a> sayfasına API anahtarı ekleyin.
+        </p>
+      )}
     </div>
   )
 }
@@ -409,12 +500,50 @@ function ResultPanel({ result, form, onPrint, onCopy, copied }) {
           </div>
         )}
 
-        {/* Periodic exam + tests + referrals */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <InfoBlock icon={<Clock size={14} />} title="Periyodik Muayene" items={[`Her ${result.periodicExam} ayda bir`]} />
-          <InfoBlock icon={<FlaskConical size={14} />} title="Tetkikler" items={result.labTests} />
-          <InfoBlock icon={<UserCheck size={14} />} title="Uzman Sevk" items={result.specialistReferrals} />
+        {/* Periodic exam */}
+        <div className="bg-slate-50 rounded-xl p-3">
+          <div className="flex items-center gap-1.5 text-slate-600 font-medium text-xs mb-1">
+            <Clock size={14} />
+            Periyodik Muayene
+          </div>
+          <p className="text-xs text-slate-700 font-semibold">Her {result.periodicExam} ayda bir</p>
         </div>
+
+        {/* Workplace tests */}
+        {result.workplaceTests?.length > 0 && (
+          <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
+            <div className="flex items-center gap-2 text-blue-800 font-semibold text-xs mb-2">
+              <FlaskConical size={14} />
+              İşyeri Tetkikleri
+              <span className="font-normal text-blue-500">(İş yeri hekimi yapar)</span>
+            </div>
+            <ul className="space-y-1">
+              {result.workplaceTests.map((t, i) => (
+                <li key={i} className="text-xs text-blue-800 flex items-start gap-1.5">
+                  <span className="text-blue-400 mt-0.5">•</span>{t}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Specialist follow-up */}
+        {result.specialistFollowUp?.length > 0 && (
+          <div className="bg-violet-50 border border-violet-100 rounded-xl p-4">
+            <div className="flex items-center gap-2 text-violet-800 font-semibold text-xs mb-2">
+              <Stethoscope size={14} />
+              Uzman Takip Kontrolü
+              <span className="font-normal text-violet-500">(Takip eden uzman yapıyor mu?)</span>
+            </div>
+            <ul className="space-y-1">
+              {result.specialistFollowUp.map((s, i) => (
+                <li key={i} className="text-xs text-violet-800 flex items-start gap-1.5">
+                  <span className="text-violet-400 mt-0.5">•</span>{s}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Notes */}
         {result.notes?.length > 0 && (
@@ -436,23 +565,6 @@ function ResultPanel({ result, form, onPrint, onCopy, copied }) {
   )
 }
 
-function InfoBlock({ icon, title, items }) {
-  return (
-    <div className="bg-slate-50 rounded-xl p-3">
-      <div className="flex items-center gap-1.5 text-slate-600 font-medium text-xs mb-2">
-        {icon}{title}
-      </div>
-      <ul className="space-y-1">
-        {items?.map((item, i) => (
-          <li key={i} className="text-xs text-slate-600 flex items-start gap-1">
-            <span className="text-slate-400 mt-0.5">•</span>{item}
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
 function EmptyState() {
   return (
     <div className="bg-white rounded-2xl border border-dashed border-slate-300 p-12 text-center">
@@ -464,4 +576,3 @@ function EmptyState() {
     </div>
   )
 }
-

@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Library from './pages/Library'
 import Assessment from './pages/Assessment'
+import Settings from './pages/Settings'
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="library" element={<Library />} />
         <Route path="assessment" element={<Assessment />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

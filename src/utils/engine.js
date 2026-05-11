@@ -25,8 +25,8 @@ export function runAssessment(selectedVariants) {
   const workCapacity = mergeCapacity(rules.map(r => r.workCapacity))
   const restrictions = mergeRestrictions(rules)
   const riskFactors = [...new Set(rules.flatMap(r => r.riskFactors || []))]
-  const labTests = [...new Set(rules.flatMap(r => r.labTests || []))]
-  const specialistReferrals = [...new Set(rules.flatMap(r => r.specialistReferrals || []))]
+  const workplaceTests = [...new Set(rules.flatMap(r => r.workplaceTests || []))]
+  const specialistFollowUp = [...new Set(rules.flatMap(r => r.specialistFollowUp || []))]
   const immediateActions = [...new Set(rules.flatMap(r => r.immediateActions || []))]
   const notes = rules.map(r => r.notes).filter(Boolean)
   const periodicExam = Math.min(...rules.map(r => r.periodicExam).filter(Boolean))
@@ -42,8 +42,8 @@ export function runAssessment(selectedVariants) {
     restrictions,
     activeRestrictions,
     riskFactors,
-    labTests,
-    specialistReferrals,
+    workplaceTests,
+    specialistFollowUp,
     immediateActions,
     notes,
     periodicExam,

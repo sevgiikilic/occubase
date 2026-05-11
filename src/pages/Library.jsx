@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { DISEASES, CATEGORIES, RESTRICTION_LABELS } from '../data/diseases'
 import { CAPACITY_META, RESTRICTION_META } from '../utils/engine'
-import { Search, ChevronDown, ChevronUp, Clock, FlaskConical, UserCheck, AlertTriangle, FileText } from 'lucide-react'
+import { Search, ChevronDown, ChevronUp, Clock, FlaskConical, Stethoscope, AlertTriangle, FileText } from 'lucide-react'
 
 export default function Library() {
   const location = useLocation()
@@ -215,21 +215,26 @@ function VariantDetail({ variant, disease }) {
       </div>
 
       {/* Bottom info row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
         <InfoBlock
           icon={<Clock size={14} />}
           title="Periyodik Muayene"
           items={[`Her ${variant.periodicExam} ayda bir`]}
+          color="slate"
         />
         <InfoBlock
           icon={<FlaskConical size={14} />}
-          title="İstenen Tetkikler"
-          items={variant.labTests}
+          title="İşyeri Tetkikleri"
+          subtitle="(İYH yapar)"
+          items={variant.workplaceTests}
+          color="blue"
         />
         <InfoBlock
-          icon={<UserCheck size={14} />}
-          title="Uzman Sevk"
-          items={variant.specialistReferrals}
+          icon={<Stethoscope size={14} />}
+          title="Uzman Takip"
+          subtitle="(Uzman yapıyor mu?)"
+          items={variant.specialistFollowUp}
+          color="violet"
         />
       </div>
 
@@ -243,17 +248,25 @@ function VariantDetail({ variant, disease }) {
   )
 }
 
-function InfoBlock({ icon, title, items }) {
+function InfoBlock({ icon, title, subtitle, items, color = 'slate' }) {
+  const styles = {
+    slate: { bg: 'bg-slate-50', header: 'text-slate-600', body: 'text-slate-600', dot: 'text-slate-400' },
+    blue: { bg: 'bg-blue-50', header: 'text-blue-700', body: 'text-blue-800', dot: 'text-blue-400' },
+    violet: { bg: 'bg-violet-50', header: 'text-violet-700', body: 'text-violet-800', dot: 'text-violet-400' },
+  }
+  const s = styles[color]
   return (
-    <div className="bg-slate-50 rounded-xl p-3">
-      <div className="flex items-center gap-1.5 text-slate-600 font-medium text-xs mb-2">
+    <div className={`${s.bg} rounded-xl p-3`}>
+      <div className={`flex items-center gap-1.5 font-medium text-xs mb-0.5 ${s.header}`}>
         {icon}
         {title}
       </div>
+      {subtitle && <div className={`text-xs mb-2 ${s.header} opacity-70`}>{subtitle}</div>}
+      {!subtitle && <div className="mb-2" />}
       <ul className="space-y-1">
         {items?.map((item, i) => (
-          <li key={i} className="text-xs text-slate-600 flex items-start gap-1">
-            <span className="text-slate-400 mt-0.5">•</span>
+          <li key={i} className={`text-xs flex items-start gap-1 ${s.body}`}>
+            <span className={`mt-0.5 ${s.dot}`}>•</span>
             {item}
           </li>
         ))}

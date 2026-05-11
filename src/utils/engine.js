@@ -11,9 +11,9 @@ export const CAPACITY_META = {
 }
 
 export const RESTRICTION_META = {
-  YES: { label: 'Kısıt Yok', color: 'text-green-700', bg: 'bg-green-50', dot: 'bg-green-500' },
+  YES:      { label: 'Kısıt Yok',   color: 'text-green-700', bg: 'bg-green-50', dot: 'bg-green-500' },
   EVALUATE: { label: 'Değerlendir', color: 'text-amber-700', bg: 'bg-amber-50', dot: 'bg-amber-500' },
-  NO: { label: 'Kısıtlı', color: 'text-red-700', bg: 'bg-red-50', dot: 'bg-red-500' },
+  NO:       { label: 'Yapamaz',     color: 'text-red-700',   bg: 'bg-red-50',   dot: 'bg-red-500' },
 }
 
 export function runAssessment(selectedVariants) {

@@ -90,7 +90,7 @@ export default function Settings() {
           )}
 
           <button type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">
+            className="w-full bg-pulse-600 hover:bg-pulse-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">
             Şifreyi Güncelle
           </button>
         </form>
@@ -110,7 +110,7 @@ function PasswordField({ label, value, onChange, show, onToggle, placeholder }) 
           onChange={e => onChange(e.target.value)}
           required
           placeholder={placeholder || '••••••••'}
-          className="w-full px-4 py-2.5 pr-11 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          className="w-full px-4 py-2.5 pr-11 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-pulse-500 transition"
         />
         <button type="button" onClick={onToggle}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">

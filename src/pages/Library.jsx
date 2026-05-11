@@ -39,7 +39,7 @@ export default function Library() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Hastalık adı veya ICD-10 kodu ara..."
-          className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pulse-500 bg-white"
         />
       </div>
 
@@ -83,7 +83,7 @@ function CategoryTab({ id, label, active, onClick, count }) {
       onClick={() => onClick(id)}
       className={`shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
         isActive
-          ? 'bg-blue-600 text-white'
+          ? 'bg-pulse-600 text-white'
           : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
       }`}
     >
@@ -186,7 +186,7 @@ function VariantDetail({ variant, disease }) {
           <div className="text-xs font-medium text-slate-500 uppercase tracking-wide">Çalışma Kısıtları</div>
           <button
             onClick={() => setShowAll(s => !s)}
-            className="text-xs text-blue-600 hover:underline"
+            className="text-xs text-pulse-600 hover:underline"
           >
             {showAll ? 'Sadece kısıtları göster' : 'Tümünü göster'}
           </button>
@@ -251,7 +251,7 @@ function VariantDetail({ variant, disease }) {
 function InfoBlock({ icon, title, subtitle, items, color = 'slate' }) {
   const styles = {
     slate: { bg: 'bg-slate-50', header: 'text-slate-600', body: 'text-slate-600', dot: 'text-slate-400' },
-    blue: { bg: 'bg-blue-50', header: 'text-blue-700', body: 'text-blue-800', dot: 'text-blue-400' },
+    blue: { bg: 'bg-pulse-50', header: 'text-pulse-700', body: 'text-pulse-800', dot: 'text-blue-400' },
     violet: { bg: 'bg-violet-50', header: 'text-violet-700', body: 'text-violet-800', dot: 'text-violet-400' },
   }
   const s = styles[color]

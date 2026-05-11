@@ -48,11 +48,11 @@ export default function Dashboard() {
       {/* Quick stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <StatCard
-          icon={<BookOpen size={22} className="text-blue-600" />}
+          icon={<BookOpen size={22} className="text-pulse-600" />}
           label="Hastalık Grubu"
           value={DISEASES.length}
           sub={`${totalDiseases} farklı klinik senaryo`}
-          bg="bg-blue-50"
+          bg="bg-pulse-50"
         />
         <StatCard
           icon={<ClipboardList size={22} className="text-teal-600" />}
@@ -75,8 +75,8 @@ export default function Dashboard() {
         <ActionCard
           title="Hastalık Kütüphanesi"
           desc="Hastalık gruplarına göre çalışma kısıtları, periyodik muayene ve sevk bilgilerini inceleyin."
-          icon={<BookOpen size={24} className="text-blue-600" />}
-          bg="bg-blue-600"
+          icon={<BookOpen size={24} className="text-pulse-600" />}
+          bg="bg-pulse-600"
           onClick={() => navigate('/library')}
         />
         <ActionCard
@@ -127,7 +127,7 @@ export default function Dashboard() {
               <button
                 key={cat.id}
                 onClick={() => navigate('/library', { state: { category: cat.id } })}
-                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-colors text-center"
+                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-pulse-300 hover:bg-pulse-50 transition-colors text-center"
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center`} style={{ backgroundColor: CAT_COLORS[cat.id] + '20' }}>
                   <Icon size={20} style={{ color: CAT_COLORS[cat.id] }} />

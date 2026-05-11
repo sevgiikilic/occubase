@@ -30,7 +30,7 @@ export default function Login() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-pulse-600 rounded-2xl mb-4 shadow-lg">
             <Stethoscope size={32} className="text-white" />
           </div>
           <h1 className="text-3xl font-bold text-slate-900">OccuBase</h1>
@@ -52,7 +52,7 @@ export default function Login() {
                   required
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition"
                   placeholder="••••••••"
                   autoFocus
                 />
@@ -75,7 +75,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition-colors"
+              className="w-full bg-pulse-600 hover:bg-pulse-700 disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition-colors"
             >
               {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
             </button>

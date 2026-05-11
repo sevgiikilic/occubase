@@ -10,6 +10,53 @@ import {
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip } from 'recharts'
 
+const WORKPLACE_CONTEXT_MAP = [
+  { terms: ['depo','ambar','lojistik','yükleme','stok'],
+    label: 'Depo / Lojistik', icon: '📦',
+    domains: ['heavyPhysical','moderatePhysical','dustExposure','chemicalExposure'],
+    note: 'Ağır kaldırma ve toz maruziyeti sıktır. Forklift yakınında çalışma olabilir.' },
+  { terms: ['forklift','iş makinesi','vinç','operatör','excavatör','beko'],
+    label: 'İş Makinesi Operatörü', icon: '🚜',
+    domains: ['operatingMachinery','drivingHeavyVehicle','noisyEnvironment'],
+    note: 'Makine kullanımı yoğun konsantrasyon ve hızlı refleks gerektirir. Epilepsi, görme ve ilaç etkisi kritik.' },
+  { terms: ['inşaat','yapı','iskele','beton','çatı'],
+    label: 'İnşaat / Yapı', icon: '🏗️',
+    domains: ['workingAtHeight','heavyPhysical','dustExposure','chemicalExposure'],
+    note: 'Yüksekte çalışma ve ağır fiziksel iş yüksek kaza riski taşır.' },
+  { terms: ['şoför','sürücü','kamyon','otobüs','minibüs','tır'],
+    label: 'Sürücü / Araç Kullanımı', icon: '🚛',
+    domains: ['drivingHeavyVehicle','operatingMachinery'],
+    note: 'Uzun süreli araç kullanımı; konsantrasyon, görme ve ilaç yan etkileri kritik.' },
+  { terms: ['gece güvenlik','güvenlik görevlisi','bekçi','security'],
+    label: 'Gece Güvenlik Görevlisi', icon: '🔒',
+    domains: ['nightShift','shiftWork'],
+    note: 'Gece vardiyası ve düzensiz uyku ritmi. Kardiyak ve psikiyatrik açıdan önemli.' },
+  { terms: ['hemşire','ebe','sağlık personeli','bakım'],
+    label: 'Sağlık Personeli', icon: '🏥',
+    domains: ['nightShift','shiftWork','heavyPhysical','chemicalExposure'],
+    note: 'Gece vardiyası, hasta kaldırma, dezenfektan ve ilaç maruziyeti.' },
+  { terms: ['kaynakçı','kaynak','lehim','metalleri'],
+    label: 'Kaynakçı', icon: '⚡',
+    domains: ['chemicalExposure','dustExposure','hotEnvironment'],
+    note: 'Metal dumanı, UV ve ısı maruziyeti yüksek. Solunum ve göz takibi şart.' },
+  { terms: ['boyacı','boya','vernik','solvent','oto boya'],
+    label: 'Boyacı / Solvent Ortamı', icon: '🎨',
+    domains: ['chemicalExposure','dustExposure'],
+    note: 'Solvent buharı ve kimyasal maruziyet. Karaciğer ve nörolojik etki olabilir.' },
+  { terms: ['maden','ocak','yeraltı','tünel','maden işçisi'],
+    label: 'Maden / Yeraltı', icon: '⛏️',
+    domains: ['dustExposure','chemicalExposure','noisyEnvironment'],
+    note: 'Silika tozu, gaz ve gürültü maruziyeti son derece yüksek risk.' },
+  { terms: ['fabrika','imalat','atölye','sanayi','üretim'],
+    label: 'Fabrika / İmalat', icon: '🏭',
+    domains: ['noisyEnvironment','chemicalExposure','heavyPhysical'],
+    note: 'Gürültü, kimyasal ve ağır fiziksel iş birlikteliği olabilir.' },
+  { terms: ['mutfak','aşçı','şef','restoran'],
+    label: 'Mutfak / Aşçı', icon: '🍳',
+    domains: ['hotEnvironment','chemicalExposure','heavyPhysical'],
+    note: 'Yüksek ısı, uzun süre ayakta çalışma, kimyasal (deterjan) maruziyet.' },
+]
+
 const HAZARD_CLASSES = [
   { id: 'low', label: 'Az Tehlikeli', months: 60, legal: '5 yılda bir' },
   { id: 'medium', label: 'Tehlikeli', months: 36, legal: '3 yılda bir' },
@@ -58,6 +105,18 @@ export default function Assessment() {
     const info = getDiseaseInfo(vId)
     return info ? { label: `${info.disease.name} — ${info.variant.label}`, icd10: info.disease.icd10 } : null
   }).filter(Boolean)
+
+  // Workplace context detection from notes + position
+  const workplaceContext = useMemo(() => {
+    const text = ((form.notes || '') + ' ' + (POSITIONS.find(p => p.id === form.position)?.label || '')).toLowerCase()
+    if (!text.trim()) return null
+    for (const ctx of WORKPLACE_CONTEXT_MAP) {
+      if (ctx.terms.some(t => text.includes(t))) {
+        return ctx
+      }
+    }
+    return null
+  }, [form.notes, form.position])
 
   function addVariant(id) {
     if (!selectedVariants.includes(id)) {
@@ -155,12 +214,12 @@ export default function Assessment() {
                 <input type="number" min="16" max="75" value={form.age}
                   onChange={e => setForm(f => ({ ...f, age: e.target.value }))}
                   placeholder="ör. 42"
-                  className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 focus:bg-white transition" />
+                  className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pulse-500 bg-slate-50 focus:bg-white transition" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">Cinsiyet</label>
                 <select value={form.gender} onChange={e => setForm(f => ({ ...f, gender: e.target.value }))}
-                  className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 focus:bg-white transition">
+                  className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pulse-500 bg-slate-50 focus:bg-white transition">
                   <option value="">Seçin</option>
                   <option value="M">Erkek</option>
                   <option value="F">Kadın</option>
@@ -170,7 +229,7 @@ export default function Assessment() {
             <div className="mb-3">
               <label className="block text-xs font-medium text-slate-600 mb-1">Çalışma Pozisyonu</label>
               <select value={form.position} onChange={e => setForm(f => ({ ...f, position: e.target.value }))}
-                className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 focus:bg-white transition">
+                className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pulse-500 bg-slate-50 focus:bg-white transition">
                 <option value="">Pozisyon seçin</option>
                 {POSITIONS.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
               </select>
@@ -230,11 +289,11 @@ export default function Assessment() {
               onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
               rows={2}
               placeholder="Özel bulgular, ilaç değişimi, muayene notları..."
-              className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none bg-slate-50 focus:bg-white transition" />
+              className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pulse-500 resize-none bg-slate-50 focus:bg-white transition" />
           </div>
 
           <button onClick={evaluate} disabled={!selectedVariants.length}
-            className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl transition-colors text-sm shadow-sm">
+            className="w-full bg-pulse-600 hover:bg-pulse-700 active:bg-blue-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl transition-colors text-sm shadow-sm">
             Değerlendir
           </button>
         </div>
@@ -256,6 +315,7 @@ export default function Assessment() {
                 effectivePeriodic={effectivePeriodic} periodicReason={periodicReason}
                 medWarnings={medWarnings} medLoading={medLoading}
                 selectedDiseaseInfo={selectedDiseaseInfo}
+                workplaceContext={workplaceContext}
                 onPrint={() => window.print()} onCopy={handleCopy} copied={copied}
               />
             )}
@@ -322,8 +382,8 @@ function DiseaseSelector({ selectedVariants, onAdd, onRemove }) {
       {selectedItems.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-3">
           {selectedItems.map(({ id, label, diseaseName, icd10 }) => (
-            <div key={id} className="flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-800 text-xs px-2.5 py-1.5 rounded-lg">
-              <span className="font-mono text-blue-500 text-[10px]">{icd10}</span>
+            <div key={id} className="flex items-center gap-1.5 bg-pulse-50 border border-pulse-200 text-pulse-800 text-xs px-2.5 py-1.5 rounded-lg">
+              <span className="font-mono text-pulse-600 text-[10px]">{icd10}</span>
               <span>{diseaseName}: {label}</span>
               <button onClick={() => onRemove(id)} className="hover:text-red-500 transition-colors ml-0.5">
                 <X size={11} />
@@ -341,7 +401,7 @@ function DiseaseSelector({ selectedVariants, onAdd, onRemove }) {
           onChange={e => { setQuery(e.target.value); setActiveDisease(null); setShowDropdown(true) }}
           onFocus={() => query.trim() && setShowDropdown(true)}
           placeholder="Hastalık adı veya ICD-10 kodu (ör. I10, E11, diyabet)"
-          className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 focus:bg-white transition"
+          className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pulse-500 bg-slate-50 focus:bg-white transition"
         />
 
         {/* Dropdown results */}
@@ -473,7 +533,7 @@ function AITextCard({ onAddVariants }) {
       )}
       {!apiKey && (
         <p className="mt-1.5 text-xs text-slate-400">
-          <Link to="/settings" className="text-blue-500 hover:underline">Ayarlar</Link> sayfasından API anahtarı ekleyin.
+          <Link to="/settings" className="text-pulse-600 hover:underline">Ayarlar</Link> sayfasından API anahtarı ekleyin.
         </p>
       )}
     </div>
@@ -481,7 +541,7 @@ function AITextCard({ onAddVariants }) {
 }
 
 /* ─── Result Panel (screen) ─── */
-function ResultPanel({ result, form, effectivePeriodic, periodicReason, medWarnings, medLoading, selectedDiseaseInfo, onPrint, onCopy, copied }) {
+function ResultPanel({ result, form, effectivePeriodic, periodicReason, medWarnings, medLoading, selectedDiseaseInfo, workplaceContext, onPrint, onCopy, copied }) {
   const cap = CAPACITY_META[result.workCapacity]
 
   const chartData = [
@@ -535,6 +595,11 @@ function ResultPanel({ result, form, effectivePeriodic, periodicReason, medWarni
               ))}
             </ul>
           </div>
+        )}
+
+        {/* Workplace context panel */}
+        {workplaceContext && (
+          <WorkplaceContextPanel ctx={workplaceContext} activeRestrictions={result.activeRestrictions} />
         )}
 
         {/* Synergies */}
@@ -876,6 +941,47 @@ function PrintReport({ result, form, effectivePeriodic, periodicReason, medWarni
         Bu rapor OccuBase klinik karar destek sistemi ile oluşturulmuştur. Bağlayıcı tıbbi tavsiye değildir.
         Nihai uygunluk değerlendirmesi iş yeri hekimine aittir.
       </div>
+    </div>
+  )
+}
+
+/* ─── Workplace Context Panel ─── */
+function WorkplaceContextPanel({ ctx, activeRestrictions }) {
+  const relevantRestrictions = activeRestrictions.filter(([domain]) => ctx.domains.includes(domain))
+  const hasRelevant = relevantRestrictions.length > 0
+
+  return (
+    <div className="rounded-xl border p-4" style={{ background: '#effaf8', borderColor: '#ace3dc' }}>
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-base">{ctx.icon}</span>
+        <span className="text-sm font-semibold" style={{ color: '#0c625e' }}>{ctx.label} — Bağlam Analizi</span>
+      </div>
+      <p className="text-xs mb-3" style={{ color: '#0d4f4c' }}>{ctx.note}</p>
+
+      {hasRelevant ? (
+        <div>
+          <div className="text-xs font-semibold mb-1.5 uppercase tracking-wide" style={{ color: '#0f7a74' }}>
+            Bu çalışma ortamında kritik kısıtlar:
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {relevantRestrictions.map(([domain, info]) => (
+              <span key={domain}
+                className={`text-xs px-2.5 py-1 rounded-lg font-medium ${
+                  info.value === 'NO'
+                    ? 'bg-red-100 text-red-800'
+                    : 'bg-amber-100 text-amber-800'
+                }`}>
+                {RESTRICTION_LABELS[domain]}: {info.value === 'NO' ? 'Yapamaz ⚠' : 'Değerlendir'}
+              </span>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p className="text-xs" style={{ color: '#1f968d' }}>
+          Bu çalışma ortamı için hastalıktan kaynaklanan özel çakışan kısıt tespit edilmedi.
+          Genel iş güvenliği kuralları geçerli.
+        </p>
+      )}
     </div>
   )
 }

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:24px; font-family: var(--font-sans); background: var(--bg-surface); color: var(--fg-1); }
+  .row { display:flex; flex-direction:column; gap:14px; }
+  .specimen { display:flex; align-items:baseline; gap:16px; border-bottom:1px solid var(--line-soft); padding-bottom:10px; }
+  .specimen:last-child { border:none; padding-bottom:0; }
+  .tag { width:88px; flex-shrink:0; }
+  .tag .name { font-size:11px; font-weight:600; color:var(--fg-2); }
+  .tag .spec { font-family:var(--font-mono); font-size:10px; color:var(--fg-3); margin-top:2px; }
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="specimen">
+    <div class="tag"><div class="name">Body LG</div><div class="spec">16 / 400</div></div>
+    <p class="text-body-lg">Periyodik muayene, yasal sınır ve hastalık takibinin en kısa olanına göre belirlenir.</p>
+  </div>
+  <div class="specimen">
+    <div class="tag"><div class="name">Body</div><div class="spec">14 / 400</div></div>
+    <p>Hastalık ve çalışma koşullarını birlikte değerlendirerek kombine kısıt raporu üretir.</p>
+  </div>
+  <div class="specimen">
+    <div class="tag"><div class="name">Meta</div><div class="spec">13 / 400</div></div>
+    <div class="text-meta">Son güncelleme: 11 Mayıs 2026 · ICD-10 referansı</div>
+  </div>
+  <div class="specimen">
+    <div class="tag"><div class="name">Eyebrow</div><div class="spec">11 / 600</div></div>
+    <div class="eyebrow">Çalışma Kısıtları</div>
+  </div>
+  <div class="specimen">
+    <div class="tag"><div class="name">Mono</div><div class="spec">JB Mono</div></div>
+    <code style="background:var(--paper-deep); padding:3px 8px; border-radius:6px;">ICD-10 · I10.0</code>
+  </div>
+</div>
+</body>
+</html>

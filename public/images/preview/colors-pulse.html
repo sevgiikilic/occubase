@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:24px; font-family: var(--font-sans); background: var(--bg-canvas); color: var(--fg-1); }
+  .card { display:flex; gap:14px; align-items:stretch; }
+  .swatch { flex:1; min-width:0; border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between; min-height:96px; box-shadow: var(--shadow-xs); position:relative; overflow:hidden; }
+  .swatch .name { font-size:12px; font-weight:600; letter-spacing:0.02em; }
+  .swatch .hex  { font-family: var(--font-mono); font-size:10.5px; opacity:0.85; }
+  .swatch .role { font-size:10px; text-transform:uppercase; letter-spacing:0.08em; opacity:0.7; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="swatch" style="background:var(--pulse-50);  color:var(--pulse-800);"><div class="role">50</div><div class="name">Pulse Mist</div><div class="hex">#EFFAF8</div></div>
+  <div class="swatch" style="background:var(--pulse-100); color:var(--pulse-800);"><div class="role">100</div><div class="name">Pulse Wash</div><div class="hex">#D5F1ED</div></div>
+  <div class="swatch" style="background:var(--pulse-300); color:#fff;"><div class="role">300</div><div class="name">Pulse Lift</div><div class="hex">#76CDC4</div></div>
+  <div class="swatch" style="background:var(--pulse-500); color:#fff;"><div class="role">500</div><div class="name">Pulse</div><div class="hex">#1F968D</div></div>
+  <div class="swatch" style="background:var(--pulse-600); color:#fff;"><div class="role">600 · brand</div><div class="name">Pulse Deep</div><div class="hex">#0F7A74</div></div>
+  <div class="swatch" style="background:var(--pulse-800); color:#fff;"><div class="role">800</div><div class="name">Pulse Ink</div><div class="hex">#0D4F4C</div></div>
+</div>
+</body>
+</html>

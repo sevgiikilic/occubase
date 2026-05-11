@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:20px; font-family: var(--font-sans); background: var(--bg-canvas); color: var(--fg-1); }
+  .grid { display:grid; grid-template-columns: repeat(6, 1fr); gap:10px; }
+  .tile { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .tile svg { color: var(--pulse-700); }
+  .name { font-size:10.5px; color:var(--fg-3); font-weight:500; }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v6a4 4 0 1 0 8 0V2"/><path d="M10 12v3a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4v-2"/><circle cx="18" cy="13" r="2"/></svg><div class="name">stethoscope</div></div>
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><div class="name">dashboard</div></div>
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/></svg><div class="name">library</div></div>
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/></svg><div class="name">clipboard</div></div>
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2a9 9 0 1 0 9 9"/><path d="M22 2 12 12"/></svg><div class="name">activity</div></div>
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div class="name">clock</div></div>
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg><div class="name">layers</div></div>
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v8a4 4 0 1 1-4 4"/><path d="M14 4h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V18"/></svg><div class="name">flask</div></div>
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m20.84 4.61-.07-.06a5.5 5.5 0 0 0-7.78 0L12 5.55l-.99-1A5.5 5.5 0 0 0 3 12.34l1 1L12 21.5l8-8.16 1-1a5.5 5.5 0 0 0-.16-7.73Z"/></svg><div class="name">heart</div></div>
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div class="name">shield</div></div>
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="m10.29 3.86-8.05 13.94A2 2 0 0 0 3.97 21h16.06a2 2 0 0 0 1.73-3.2L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg><div class="name">alert-tri</div></div>
+  <div class="tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><div class="name">check</div></div>
+</div>
+</body>
+</html>

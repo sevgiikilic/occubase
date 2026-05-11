@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:20px; font-family: var(--font-sans); background: var(--bg-canvas); color: var(--fg-1); }
+  .grid { display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:20px; padding:18px; box-shadow:var(--shadow-sm); }
+  .card.brand { background: linear-gradient(135deg, var(--pulse-600), var(--pulse-800)); color:#fff; border:none; }
+  .card.tinted { background: var(--pulse-50); border-color: var(--pulse-100); }
+  .row { display:flex; align-items:center; gap:10px; }
+  .ico { width:36px; height:36px; border-radius:11px; background: var(--pulse-50); color:var(--pulse-700); display:flex; align-items:center; justify-content:center; }
+  .brand .ico { background:rgba(255,255,255,0.18); color:#fff; }
+  .num { font-family: var(--font-display); font-size:30px; font-weight:700; letter-spacing:-0.02em; margin-top:6px; }
+  .lbl { font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--fg-3); font-weight:600; }
+  .brand .lbl { color:rgba(255,255,255,0.7); }
+  .sub { font-size:11.5px; color:var(--fg-3); margin-top:4px; }
+  .brand .sub { color:rgba(255,255,255,0.75); }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="card">
+    <div class="row" style="justify-content:space-between;">
+      <div class="lbl">Hastalık Grubu</div>
+      <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/></svg></div>
+    </div>
+    <div class="num">28</div>
+    <div class="sub">120 farklı klinik senaryo</div>
+  </div>
+  <div class="card brand">
+    <div class="row" style="justify-content:space-between;">
+      <div class="lbl">Çalışabilirlik</div>
+      <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>
+    <div class="num">4 kategori</div>
+    <div class="sub">Tam → Kısıtlı → Geçici → Kalıcı</div>
+  </div>
+</div>
+</body>
+</html>

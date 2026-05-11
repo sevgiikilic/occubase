@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:24px; font-family: var(--font-sans); background: var(--bg-canvas); color: var(--fg-1); }
+  .grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; }
+  .cat { border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:6px; border:1px solid var(--line); background:#fff; }
+  .swatch { height:42px; border-radius:8px; }
+  .label { font-size:11px; font-weight:600; color:var(--fg-2); }
+  .hex { font-family:var(--font-mono); font-size:10px; color:var(--fg-3); }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="cat"><div class="swatch" style="background:var(--cat-cardio)"></div><div class="label">Kardiyovasküler</div><div class="hex">#E0524F</div></div>
+  <div class="cat"><div class="swatch" style="background:var(--cat-metabolic)"></div><div class="label">Metabolik</div><div class="hex">#E88B2A</div></div>
+  <div class="cat"><div class="swatch" style="background:var(--cat-resp)"></div><div class="label">Solunum</div><div class="hex">#2AA5D6</div></div>
+  <div class="cat"><div class="swatch" style="background:var(--cat-neuro)"></div><div class="label">Nörolojik</div><div class="hex">#7B6BD6</div></div>
+  <div class="cat"><div class="swatch" style="background:var(--cat-psych)"></div><div class="label">Psikiyatrik</div><div class="hex">#B259C4</div></div>
+  <div class="cat"><div class="swatch" style="background:var(--cat-renal)"></div><div class="label">Renal/Hepatik</div><div class="hex">#D97A3A</div></div>
+  <div class="cat"><div class="swatch" style="background:var(--cat-musc)"></div><div class="label">Kas-İskelet</div><div class="hex">#3EA66E</div></div>
+  <div class="cat"><div class="swatch" style="background:var(--cat-special)"></div><div class="label">Özel</div><div class="hex">#D65A92</div></div>
+</div>
+</body>
+</html>

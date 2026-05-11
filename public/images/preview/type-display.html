@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:24px; font-family: var(--font-sans); background: var(--bg-surface); color: var(--fg-1); }
+  .row { display:flex; flex-direction:column; gap:14px; }
+  .specimen { display:flex; align-items:baseline; gap:16px; border-bottom:1px solid var(--line-soft); padding-bottom:10px; }
+  .specimen:last-child { border:none; padding-bottom:0; }
+  .tag { width:88px; flex-shrink:0; }
+  .tag .name { font-size:11px; font-weight:600; color:var(--fg-2); }
+  .tag .spec { font-family:var(--font-mono); font-size:10px; color:var(--fg-3); margin-top:2px; }
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="specimen">
+    <div class="tag"><div class="name">Display</div><div class="spec">48 / 700</div></div>
+    <div class="text-display-xl">Sağlıklı çalışmak</div>
+  </div>
+  <div class="specimen">
+    <div class="tag"><div class="name">H1</div><div class="spec">28 / 700</div></div>
+    <div style="font-family:var(--font-display); font-size:28px; font-weight:700; letter-spacing:-0.02em;">Genel Bakış</div>
+  </div>
+  <div class="specimen">
+    <div class="tag"><div class="name">H2</div><div class="spec">22 / 600</div></div>
+    <h2>Hastalık Kütüphanesi</h2>
+  </div>
+</div>
+</body>
+</html>

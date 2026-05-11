@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:24px; font-family: var(--font-sans); background: var(--bg-canvas); color: var(--fg-1); }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  button {
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    padding: 10px 18px; border-radius: 12px; cursor: pointer;
+    transition: all var(--t-fast) var(--ease-out);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary { background: var(--pulse-600); color: #fff; border:1px solid var(--pulse-600); box-shadow: var(--shadow-brand); }
+  .btn-primary:hover { background: var(--pulse-700); }
+  .btn-secondary { background: #fff; color: var(--fg-1); border:1px solid var(--line); box-shadow: var(--shadow-xs); }
+  .btn-secondary:hover { background: var(--paper-deep); }
+  .btn-ghost { background: transparent; color: var(--pulse-700); border:1px solid transparent; }
+  .btn-ghost:hover { background: var(--pulse-50); }
+  .btn-danger { background: var(--risk-600); color:#fff; border:1px solid var(--risk-600); }
+  .btn-danger:hover { background: var(--risk-700); }
+  .btn-sm { padding:7px 12px; font-size:12px; border-radius:10px; }
+  svg { width:14px; height:14px; }
+</style>
+</head>
+<body>
+<div class="row">
+  <button class="btn-primary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    Değerlendir
+  </button>
+  <button class="btn-secondary">Tümünü göster</button>
+  <button class="btn-ghost">İptal</button>
+  <button class="btn-danger">Çıkış Yap</button>
+  <button class="btn-secondary btn-sm">Filtrele</button>
+  <button class="btn-primary btn-sm">+ Tanı ekle</button>
+</div>
+</body>
+</html>

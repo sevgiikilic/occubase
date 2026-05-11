@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:24px; font-family: var(--font-sans); background: var(--bg-canvas); color: var(--fg-1); }
+  .row { display:flex; gap:10px; flex-wrap:wrap; }
+  .badge { display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:99px; font-size:12px; font-weight:600; border:1px solid; }
+  .dot { width:6px; height:6px; border-radius:99px; }
+  .b-ok    { background:var(--ok-50);  border-color:var(--ok-100);  color:var(--ok-700); }
+  .b-warn  { background:var(--warn-50);border-color:var(--warn-100);color:var(--warn-700); }
+  .b-risk  { background:var(--risk-50);border-color:var(--risk-100);color:var(--risk-700); }
+  .b-info  { background:var(--info-50);border-color:var(--info-100);color:var(--info-700); }
+  .b-neutral { background:#fff; border-color:var(--line); color:var(--fg-2); }
+  .b-solid { background:var(--pulse-600); color:#fff; border-color:var(--pulse-600); }
+  .b-mono { font-family:var(--font-mono); background:var(--paper-deep); border-color:var(--line); color:var(--fg-2); }
+</style>
+</head>
+<body>
+<div class="row">
+  <span class="badge b-ok"><span class="dot" style="background:var(--ok-500)"></span>Tam Uygun</span>
+  <span class="badge b-warn"><span class="dot" style="background:var(--warn-500)"></span>Kısıtla Uygun</span>
+  <span class="badge b-risk"><span class="dot" style="background:var(--risk-500)"></span>Kalıcı Uygun Değil</span>
+  <span class="badge b-info">14 senaryo</span>
+  <span class="badge b-solid">Aktif</span>
+  <span class="badge b-mono">I10.0</span>
+  <span class="badge b-neutral">Periyodik · 12 ay</span>
+</div>
+</body>
+</html>

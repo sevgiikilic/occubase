@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #f1f5f9;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root { min-height: 100vh; }
+
+/* ── Print styles ── */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print,
+  .sidebar,
+  .assessment-form-col {
+    display: none !important;
+  }
+
+  .assessment-grid {
+    display: block !important;
+  }
+
+  body {
+    background: white !important;
+    font-size: 10pt;
+    color: #000;
+  }
+
+  .main-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Print report typography */
+  .print-report {
+    padding: 16pt 20pt;
+    max-width: 100%;
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 10pt;
+    color: #000;
+  }
+
+  .print-section-title {
+    font-weight: 700;
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #f0f0f0;
+    border: 0.5pt solid #888;
+    padding: 3pt 8pt;
+    margin-top: 10pt;
+    margin-bottom: 0;
+  }
+
+  .print-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin-bottom: 0;
+  }
+
+  .print-table th {
+    background: #f0f0f0;
+    font-weight: 600;
+    padding: 3pt 8pt;
+    border: 0.5pt solid #888;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .print-table td {
+    padding: 3pt 8pt;
+    border: 0.5pt solid #888;
+    vertical-align: top;
+  }
+
+  /* Ensure colors in capacity box */
+  .print-report .border-2 {
+    border: 2pt solid #000 !important;
+  }
+
+  /* Prevent page break inside sections */
+  .print-report > div {
+    break-inside: avoid;
+  }
+}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:18px; font-family: var(--font-sans); background: var(--bg-canvas); color: var(--fg-1); }
+  .row { display:flex; gap:10px; }
+  .restr { flex:1; display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; }
+  .dot { width:8px; height:8px; border-radius:99px; flex-shrink:0; }
+  .lbl { font-size:11.5px; font-weight:600; flex:1; }
+  .val { font-size:11px; font-weight:600; }
+  .ok { background: var(--ok-50); color: var(--ok-700); }
+  .warn { background: var(--warn-50); color: var(--warn-700); }
+  .risk { background: var(--risk-50); color: var(--risk-700); }
+  .stack { display:flex; flex-direction:column; gap:6px; }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="row">
+    <div class="restr ok">
+      <span class="dot" style="background:var(--ok-500)"></span>
+      <div class="lbl">Gece Çalışması</div>
+      <span class="val">Kısıt Yok</span>
+    </div>
+    <div class="restr warn">
+      <span class="dot" style="background:var(--warn-500)"></span>
+      <div class="lbl">Ağır Yük Taşıma</div>
+      <span class="val">Değerlendir</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="restr risk">
+      <span class="dot" style="background:var(--risk-500)"></span>
+      <div class="lbl">Yüksekte Çalışma</div>
+      <span class="val">Kısıtlı</span>
+    </div>
+    <div class="restr risk">
+      <span class="dot" style="background:var(--risk-500)"></span>
+      <div class="lbl">Kimyasal Maruziyet</div>
+      <span class="val">Kısıtlı</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

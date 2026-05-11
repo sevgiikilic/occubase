@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:24px; font-family: var(--font-sans); background: var(--bg-canvas); color: var(--fg-1); }
+  .card { display:flex; gap:14px; }
+  .swatch { flex:1; min-width:0; border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between; min-height:96px; box-shadow: var(--shadow-xs); border:1px solid var(--line); }
+  .swatch .name { font-size:12px; font-weight:600; }
+  .swatch .hex  { font-family: var(--font-mono); font-size:10.5px; opacity:0.85; }
+  .swatch .role { font-size:10px; text-transform:uppercase; letter-spacing:0.08em; opacity:0.7; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="swatch" style="background:var(--paper); color:var(--ink-700);"><div class="role">canvas</div><div class="name">Paper</div><div class="hex">#FBFAF7</div></div>
+  <div class="swatch" style="background:var(--paper-deep); color:var(--ink-700);"><div class="role">sunken</div><div class="name">Paper Deep</div><div class="hex">#F4F2EC</div></div>
+  <div class="swatch" style="background:var(--ink-100); color:var(--ink-700);"><div class="role">100</div><div class="name">Ink Wash</div><div class="hex">#E8EDF6</div></div>
+  <div class="swatch" style="background:var(--ink-400); color:#fff;"><div class="role">400 · fg-4</div><div class="name">Ink Soft</div><div class="hex">#6B80A8</div></div>
+  <div class="swatch" style="background:var(--ink-700); color:#fff;"><div class="role">700 · fg-2</div><div class="name">Ink</div><div class="hex">#243450</div></div>
+  <div class="swatch" style="background:var(--ink-900); color:#fff; border-color:transparent;"><div class="role">900 · fg-1</div><div class="name">Clinic Ink</div><div class="hex">#0B1428</div></div>
+</div>
+</body>
+</html>

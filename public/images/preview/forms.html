@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:24px; font-family: var(--font-sans); background: var(--bg-canvas); color: var(--fg-1); }
+  .col { display:flex; flex-direction:column; gap:12px; max-width:420px; }
+  label { font-size:11.5px; font-weight:600; color:var(--fg-2); margin-bottom:4px; display:block; }
+  .field { position:relative; }
+  input, select {
+    width:100%; box-sizing:border-box; font-family:inherit; font-size:13px; color:var(--fg-1);
+    padding: 10px 14px; border-radius: 12px; border:1px solid var(--line); background: #fff;
+    transition: all var(--t-fast) var(--ease-out);
+  }
+  input:focus, select:focus { outline:none; border-color:var(--pulse-500); box-shadow:0 0 0 4px var(--pulse-50); }
+  input::placeholder { color: var(--fg-4); }
+  .search { padding-left:36px; }
+  .ico { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--fg-4); }
+</style>
+</head>
+<body>
+<div class="col">
+  <div>
+    <label>Hastalık ara</label>
+    <div class="field">
+      <svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input class="search" placeholder="ör. hipertansiyon, ICD-10 I10..."/>
+    </div>
+  </div>
+  <div>
+    <label>Çalışma pozisyonu</label>
+    <select><option>Ofis / Masa Başı</option></select>
+  </div>
+</div>
+</body>
+</html>

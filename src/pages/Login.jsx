@@ -5,7 +5,7 @@ import { Stethoscope, Eye, EyeOff } from 'lucide-react'
 
 export default function Login() {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ email: '', password: '' })
+  const [password, setPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -15,11 +15,11 @@ export default function Login() {
     setLoading(true)
     setError('')
     setTimeout(() => {
-      const result = login(form.email, form.password)
+      const result = login('user@occubase', password)
       if (result.ok) {
         navigate('/dashboard')
       } else {
-        setError(result.error)
+        setError('Şifre hatalı.')
       }
       setLoading(false)
     }, 400)
@@ -44,30 +44,17 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                E-posta
-              </label>
-              <input
-                type="email"
-                required
-                value={form.email}
-                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                className="w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                placeholder="hekim@ornek.com"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Şifre
+                Erişim Şifresi
               </label>
               <div className="relative">
                 <input
                   type={showPw ? 'text' : 'password'}
                   required
-                  value={form.password}
-                  onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                   className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                   placeholder="••••••••"
+                  autoFocus
                 />
                 <button
                   type="button"
@@ -93,19 +80,17 @@ export default function Login() {
               {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
             </button>
           </form>
-
-          <div className="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
-            <p className="text-xs text-slate-500 text-center">
-              Varsayılan şifre: <span className="font-mono font-medium text-slate-700">occubase2024</span>
-              <br />
-              <span className="text-slate-400">Ayarlar bölümünden değiştirilebilir.</span>
-            </p>
-          </div>
         </div>
 
-        <p className="text-center text-xs text-slate-400 mt-6">
-          Bu sistem hasta verisi saklamaz. Tüm veriler yalnızca oturum süresince geçerlidir.
-        </p>
+        <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <p className="text-xs text-amber-800 font-semibold mb-1">Yasal Sorumluluk Reddi</p>
+          <p className="text-xs text-amber-700 leading-relaxed">
+            OccuBase yalnızca iş yeri hekimleri için klinik karar destek aracıdır.
+            Sunulan bilgiler genel rehber niteliğinde olup <strong>bağlayıcı tıbbi tavsiye değildir</strong>.
+            Nihai çalışabilirlik kararı, bireysel muayene bulgularına dayanarak iş yeri hekimi tarafından verilmelidir.
+            Sistem hasta verisi saklamaz; tüm değerlendirmeler oturum süresince geçerlidir.
+          </p>
+        </div>
       </div>
     </div>
   )

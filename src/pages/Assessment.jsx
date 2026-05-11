@@ -2,7 +2,8 @@ import { useState, useMemo, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { DISEASES, RESTRICTION_LABELS } from '../data/diseases'
 import { runAssessment, CAPACITY_META, RESTRICTION_META } from '../utils/engine'
-import { parseDiseases, analyzeMedications, getApiKey } from '../utils/ai'
+import { parseDiseases, analyzeMedications, generateDiseaseProfile, getApiKey } from '../utils/ai'
+import { getCustomDiseases, saveCustomDisease, isCustomDisease } from '../utils/customDiseases'
 import {
   Search, X, Printer, Copy, CheckCircle, AlertTriangle, Clock,
   FlaskConical, Stethoscope, Info, ClipboardList, Sparkles, Loader2, Pill,
@@ -74,8 +75,12 @@ const POSITIONS = [
   { id: 'night', label: 'Gece / Vardiyalı Çalışma' },
 ]
 
+function getAllDiseases() {
+  return [...DISEASES, ...getCustomDiseases()]
+}
+
 function getDiseaseInfo(vId) {
-  for (const d of DISEASES) {
+  for (const d of getAllDiseases()) {
     const v = d.variants.find(v => v.id === vId)
     if (v) return { variant: v, disease: d }
   }
@@ -342,17 +347,23 @@ function DiseaseSelector({ selectedVariants, onAdd, onRemove }) {
   const [query, setQuery] = useState('')
   const [activeDisease, setActiveDisease] = useState(null)
   const [showDropdown, setShowDropdown] = useState(false)
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiPreview, setAiPreview] = useState(null)
+  const [aiError, setAiError] = useState('')
+  const [customList, setCustomList] = useState(() => getCustomDiseases())
   const wrapperRef = useRef(null)
+
+  const allDiseases = useMemo(() => [...DISEASES, ...customList], [customList])
 
   const searchResults = useMemo(() => {
     if (!query.trim()) return []
     const q = query.toLowerCase()
-    return DISEASES.filter(d =>
+    return allDiseases.filter(d =>
       d.name.toLowerCase().includes(q) ||
       d.icd10.toLowerCase().includes(q) ||
       d.description?.toLowerCase().includes(q)
     ).slice(0, 7)
-  }, [query])
+  }, [query, allDiseases])
 
   useEffect(() => {
     function handleClick(e) {
@@ -365,8 +376,11 @@ function DiseaseSelector({ selectedVariants, onAdd, onRemove }) {
   }, [])
 
   const selectedItems = selectedVariants.map(vId => {
-    const info = getDiseaseInfo(vId)
-    return info ? { id: vId, label: info.variant.label, diseaseName: info.disease.name, icd10: info.disease.icd10 } : null
+    for (const d of allDiseases) {
+      const v = d.variants.find(v => v.id === vId)
+      if (v) return { id: vId, label: v.label, diseaseName: d.name, icd10: d.icd10, isCustom: isCustomDisease(d.id) }
+    }
+    return null
   }).filter(Boolean)
 
   function selectVariant(variantId) {
@@ -376,15 +390,42 @@ function DiseaseSelector({ selectedVariants, onAdd, onRemove }) {
     setShowDropdown(false)
   }
 
+  async function handleGenerateAI() {
+    const apiKey = getApiKey()
+    if (!apiKey) { setAiError('API anahtarı tanımlı değil.'); return }
+    setAiLoading(true)
+    setAiError('')
+    setAiPreview(null)
+    setShowDropdown(false)
+    try {
+      const profile = await generateDiseaseProfile(query.trim(), apiKey)
+      setAiPreview(profile)
+    } catch (e) {
+      setAiError(e.message || 'AI profili oluşturulamadı.')
+    } finally {
+      setAiLoading(false)
+    }
+  }
+
+  function handleSaveAndAdd() {
+    if (!aiPreview) return
+    saveCustomDisease(aiPreview)
+    setCustomList(getCustomDiseases())
+    setActiveDisease(aiPreview)
+    setAiPreview(null)
+    setQuery('')
+  }
+
   return (
     <div>
       {/* Selected chips */}
       {selectedItems.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-3">
-          {selectedItems.map(({ id, label, diseaseName, icd10 }) => (
+          {selectedItems.map(({ id, label, diseaseName, icd10, isCustom }) => (
             <div key={id} className="flex items-center gap-1.5 bg-pulse-50 border border-pulse-200 text-pulse-800 text-xs px-2.5 py-1.5 rounded-lg">
               <span className="font-mono text-pulse-600 text-[10px]">{icd10}</span>
               <span>{diseaseName}: {label}</span>
+              {isCustom && <span className="bg-amber-100 text-amber-700 px-1 rounded text-[9px] font-semibold">AI</span>}
               <button onClick={() => onRemove(id)} className="hover:text-red-500 transition-colors ml-0.5">
                 <X size={11} />
               </button>
@@ -398,7 +439,7 @@ function DiseaseSelector({ selectedVariants, onAdd, onRemove }) {
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
         <input
           type="text" value={query}
-          onChange={e => { setQuery(e.target.value); setActiveDisease(null); setShowDropdown(true) }}
+          onChange={e => { setQuery(e.target.value); setActiveDisease(null); setAiPreview(null); setAiError(''); setShowDropdown(true) }}
           onFocus={() => query.trim() && setShowDropdown(true)}
           placeholder="Hastalık adı veya ICD-10 kodu (ör. I10, E11, diyabet)"
           className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pulse-500 bg-slate-50 focus:bg-white transition"
@@ -412,26 +453,95 @@ function DiseaseSelector({ selectedVariants, onAdd, onRemove }) {
                 onClick={() => { setActiveDisease(d); setShowDropdown(false) }}
                 className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-blue-50 text-left transition-colors border-b border-slate-50 last:border-0">
                 <span className="text-sm font-medium text-slate-800">{d.name}</span>
-                <span className="text-xs font-mono bg-slate-100 text-slate-500 px-2 py-0.5 rounded shrink-0 ml-2">{d.icd10}</span>
+                <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                  {isCustomDisease(d.id) && <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-semibold">AI</span>}
+                  <span className="text-xs font-mono bg-slate-100 text-slate-500 px-2 py-0.5 rounded">{d.icd10}</span>
+                </div>
               </button>
             ))}
           </div>
         )}
 
-        {showDropdown && query.trim() && searchResults.length === 0 && !activeDisease && (
+        {/* No results → AI generate button */}
+        {showDropdown && query.trim().length >= 2 && searchResults.length === 0 && !activeDisease && !aiLoading && !aiPreview && (
           <div className="absolute z-20 top-full mt-1 left-0 right-0 bg-white border border-slate-200 rounded-xl shadow-lg px-4 py-3">
-            <p className="text-xs text-slate-400">Sonuç bulunamadı — Serbest metin alanına yazıp AI ile analiz edebilirsiniz.</p>
+            <p className="text-xs text-slate-500 mb-2">"{query}" veri tabanında bulunamadı.</p>
+            <button
+              onClick={handleGenerateAI}
+              disabled={!getApiKey()}
+              className="flex items-center gap-2 text-xs font-medium bg-amber-50 border border-amber-300 text-amber-800 px-3 py-2 rounded-lg hover:bg-amber-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed w-full">
+              <Sparkles size={13} />
+              AI ile "{query}" profili oluştur
+            </button>
+            {!getApiKey() && <p className="text-[10px] text-slate-400 mt-1">AI özelliği için Groq API anahtarı gerekli.</p>}
           </div>
         )}
       </div>
+
+      {/* AI loading */}
+      {aiLoading && (
+        <div className="mt-2 flex items-center gap-2 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-700">
+          <Loader2 size={14} className="animate-spin" />
+          AI mesleki profil oluşturuyor...
+        </div>
+      )}
+
+      {/* AI error */}
+      {aiError && (
+        <div className="mt-2 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
+          {aiError}
+        </div>
+      )}
+
+      {/* AI preview */}
+      {aiPreview && (
+        <div className="mt-2 p-4 bg-amber-50 border border-amber-300 rounded-xl">
+          <div className="flex items-start justify-between mb-2">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold text-slate-900">{aiPreview.name}</span>
+                <span className="font-mono text-xs text-slate-400">{aiPreview.icd10}</span>
+                <span className="text-[10px] bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded font-semibold">AI</span>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">{aiPreview.description}</p>
+            </div>
+            <button onClick={() => setAiPreview(null)} className="text-slate-400 hover:text-slate-600 ml-2 shrink-0">
+              <X size={14} />
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {aiPreview.variants?.map(v => (
+              <span key={v.id} className="text-xs bg-white border border-amber-200 text-slate-700 px-2 py-1 rounded-lg">
+                {v.label} — <span className="text-amber-700 font-medium">{CAPACITY_META[v.workCapacity]?.label}</span>
+              </span>
+            ))}
+          </div>
+          <p className="text-[10px] text-amber-700 mb-3">AI tarafından oluşturulmuştur. Klinik doğrulama önerilir.</p>
+          <div className="flex gap-2">
+            <button
+              onClick={handleSaveAndAdd}
+              className="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold py-2 px-3 rounded-lg transition-colors">
+              Kaydet ve Değerlendirmeye Ekle
+            </button>
+            <button
+              onClick={() => setAiPreview(null)}
+              className="text-xs text-slate-500 hover:text-slate-700 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+              İptal
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Severity selection */}
       {activeDisease && (
         <div className="mt-2 p-4 bg-blue-50 border border-blue-200 rounded-xl">
           <div className="flex items-center justify-between mb-2">
-            <div>
+            <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-slate-900">{activeDisease.name}</span>
-              <span className="ml-2 text-xs font-mono text-slate-400">{activeDisease.icd10}</span>
+              <span className="text-xs font-mono text-slate-400">{activeDisease.icd10}</span>
+              {isCustomDisease(activeDisease.id) && (
+                <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-semibold border border-amber-200">AI</span>
+              )}
             </div>
             <button onClick={() => { setActiveDisease(null); setQuery('') }}
               className="text-slate-400 hover:text-slate-600 transition-colors">

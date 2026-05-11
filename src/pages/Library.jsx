@@ -2,15 +2,25 @@ import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { DISEASES, CATEGORIES, RESTRICTION_LABELS } from '../data/diseases'
 import { CAPACITY_META, RESTRICTION_META } from '../utils/engine'
-import { Search, ChevronDown, ChevronUp, Clock, FlaskConical, Stethoscope, AlertTriangle, FileText } from 'lucide-react'
+import { getCustomDiseases, deleteCustomDisease, isCustomDisease } from '../utils/customDiseases'
+import { Search, ChevronDown, ChevronUp, Clock, FlaskConical, Stethoscope, AlertTriangle, FileText, Trash2 } from 'lucide-react'
 
 export default function Library() {
   const location = useLocation()
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState(location.state?.category || 'all')
   const [expanded, setExpanded] = useState({})
+  const [customDiseases, setCustomDiseases] = useState(() => getCustomDiseases())
 
-  const filtered = DISEASES.filter(d => {
+  const allDiseases = [...DISEASES, ...customDiseases]
+
+  function handleDeleteCustom(id) {
+    if (!window.confirm('Bu AI hastalık profilini silmek istediğinize emin misiniz?')) return
+    deleteCustomDisease(id)
+    setCustomDiseases(getCustomDiseases())
+  }
+
+  const filtered = allDiseases.filter(d => {
     const matchCat = activeCategory === 'all' || d.category === activeCategory
     const matchSearch = !search ||
       d.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -45,7 +55,7 @@ export default function Library() {
 
       {/* Category tabs */}
       <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
-        <CategoryTab id="all" label="Tümü" active={activeCategory} onClick={setActiveCategory} count={DISEASES.length} />
+        <CategoryTab id="all" label="Tümü" active={activeCategory} onClick={setActiveCategory} count={allDiseases.length} />
         {CATEGORIES.map(cat => (
           <CategoryTab
             key={cat.id}
@@ -53,7 +63,7 @@ export default function Library() {
             label={cat.label}
             active={activeCategory}
             onClick={setActiveCategory}
-            count={DISEASES.filter(d => d.category === cat.id).length}
+            count={allDiseases.filter(d => d.category === cat.id).length}
           />
         ))}
       </div>
@@ -69,6 +79,7 @@ export default function Library() {
             disease={disease}
             expanded={expanded}
             onToggle={toggle}
+            onDelete={isCustomDisease(disease.id) ? handleDeleteCustom : null}
           />
         ))}
       </div>
@@ -92,32 +103,51 @@ function CategoryTab({ id, label, active, onClick, count }) {
   )
 }
 
-function DiseaseGroup({ disease, expanded, onToggle }) {
+function DiseaseGroup({ disease, expanded, onToggle, onDelete }) {
   const isOpen = expanded[disease.id]
+  const isAI = isCustomDisease(disease.id)
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+    <div className={`bg-white rounded-2xl border overflow-hidden ${isAI ? 'border-amber-200' : 'border-slate-200'}`}>
       <button
         className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-50 transition-colors"
         onClick={() => onToggle(disease.id)}
       >
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="font-semibold text-slate-900">{disease.name}</span>
               <span className="text-xs font-mono bg-slate-100 text-slate-500 px-2 py-0.5 rounded">{disease.icd10}</span>
+              {isAI && (
+                <span className="text-[10px] bg-amber-100 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full font-semibold">
+                  AI Destekli
+                </span>
+              )}
             </div>
             <span className="text-sm text-slate-500 mt-0.5">{disease.description}</span>
           </div>
         </div>
-        <div className="flex items-center gap-3 shrink-0 ml-4">
+        <div className="flex items-center gap-2 shrink-0 ml-4">
           <span className="text-xs text-slate-400">{disease.variants.length} senaryo</span>
+          {onDelete && (
+            <button
+              onClick={e => { e.stopPropagation(); onDelete(disease.id) }}
+              className="p-1 text-slate-300 hover:text-red-500 transition-colors rounded"
+              title="Bu AI profilini sil">
+              <Trash2 size={14} />
+            </button>
+          )}
           {isOpen ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />}
         </div>
       </button>
 
       {isOpen && (
-        <div className="border-t border-slate-100 divide-y divide-slate-100">
+        <div className={`border-t divide-y ${isAI ? 'border-amber-100 divide-amber-50' : 'border-slate-100 divide-slate-100'}`}>
+          {isAI && (
+            <div className="px-5 py-2 bg-amber-50 text-[11px] text-amber-700">
+              Bu profil AI tarafından oluşturulmuştur. Klinik kullanımdan önce doğrulama önerilir.
+            </div>
+          )}
           {disease.variants.map(variant => (
             <VariantDetail key={variant.id} variant={variant} disease={disease} />
           ))}

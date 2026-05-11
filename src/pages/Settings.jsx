@@ -49,7 +49,7 @@ export default function Settings() {
             type={showKey ? 'text' : 'password'}
             value={apiKey}
             onChange={e => setApiKey(e.target.value)}
-            placeholder="sk-ant-..."
+            placeholder="gsk_..."
             className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
@@ -83,9 +83,9 @@ export default function Settings() {
         <div className="mt-4 bg-slate-50 rounded-xl p-4">
           <p className="text-xs text-slate-500 leading-relaxed">
             API anahtarı almak için{' '}
-            <span className="font-mono text-blue-600">console.anthropic.com</span>{' '}
-            adresini ziyaret edin. Bu özellik isteğe bağlıdır; API anahtarı olmadan
-            kural tabanlı değerlendirme tam olarak çalışır.
+            <span className="font-mono text-blue-600">console.groq.com</span>{' '}
+            adresini ziyaret edin (ücretsiz, kart gerekmez). Bu özellik isteğe bağlıdır;
+            API anahtarı olmadan kural tabanlı değerlendirme tam olarak çalışır.
           </p>
         </div>
       </div>

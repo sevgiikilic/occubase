@@ -1,4 +1,4 @@
-const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages'
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
 export const AI_KEY_STORAGE = 'occubase_ai_key'
 
 export function getApiKey() {
@@ -22,16 +22,14 @@ ${variantList}
 Değerlendirilecek metin:
 ${freeText}`
 
-  const res = await fetch(CLAUDE_API_URL, {
+  const res = await fetch(GROQ_API_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
+      'Authorization': `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'llama-3.3-70b-versatile',
       max_tokens: 512,
       messages: [{ role: 'user', content: prompt }],
     }),
@@ -43,7 +41,7 @@ ${freeText}`
   }
 
   const data = await res.json()
-  const text = data.content?.[0]?.text || ''
+  const text = data.choices?.[0]?.message?.content || ''
   const match = text.match(/\{[\s\S]*\}/)
   if (!match) throw new Error('Yapay zekadan geçersiz yanıt alındı.')
   return JSON.parse(match[0])
